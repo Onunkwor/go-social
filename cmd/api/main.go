@@ -19,7 +19,7 @@ func main() {
 	cfg := config{
 		addr: env.GetString(addr, ":4000"),
 		db: dbConfig{
-			dsn:          env.GetString(os.Getenv("DB_DSN"), "postgres://user :adminpassword@localhost:5432/social?sslmode=disable"),
+			dsn:          env.GetString(os.Getenv("DB_DSN"), "postgres://user:adminpassword@localhost:5432/social?sslmode=disable"),
 			maxOpenConns: env.GetInt(os.Getenv("DB_MAX_OPEN_CONNS"), 25),
 			maxIdleConns: env.GetInt(os.Getenv("DB_MAX_IDLE_CONNS"), 25),
 			maxIdleTime:  env.GetString(os.Getenv("DB_MAX_IDLE_TIME"), "15m"),
@@ -35,7 +35,9 @@ func main() {
 	}
 
 	store := store.NewStorage(db)
+	defer db.Close()
 
+	log.Printf("Connected to database at %s", cfg.db.dsn)
 	app := &application{
 		config: cfg,
 		store:  store,
