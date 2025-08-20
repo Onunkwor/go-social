@@ -37,7 +37,7 @@ func main() {
 	store := store.NewStorage(db)
 	defer db.Close()
 
-	log.Printf("Connected to database at %s", cfg.db.dsn)
+	// log.Printf("Connected to database at %s", cfg.db.dsn)
 	app := &application{
 		config: cfg,
 		store:  store,
