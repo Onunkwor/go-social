@@ -1,21 +1,6 @@
 version: "3.8"
 
 services:
-  # api:
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - "4000:4000"
-  #   environment:
-  #     - API_ADDR=:4000
-  #     - DB_DSN=postgres://user:adminpassword@localhost:5432/social?sslmode=disable
-  #     - DB_MAX_OPEN_CONNS=25
-  #     - DB_MAX_IDLE_CONNS=25
-  #     - DB_MAX_IDLE_TIME=15m
-  #   depends_on:
-  #     - db
-
   db:
     image: postgres:16.3
     container_name: postgres-db
@@ -24,7 +9,7 @@ services:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: adminpassword
     volumes:
-      - db_data:/var/lib/postgresql/data
+      - db_data:/var/lib/postgresql/data  // Persist data
       - ./scripts:/docker-entrypoint-initdb.d
     ports:
       - "5432:5432"
