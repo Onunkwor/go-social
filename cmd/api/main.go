@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"github/onunkwor/social/internal/db"
 	"github/onunkwor/social/internal/env"
 	"github/onunkwor/social/internal/store"
@@ -16,26 +17,29 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 	addr := os.Getenv("API_ADDR")
+	// dynamic database selection
+	envName := env.GetString(os.Getenv("APP_ENV"), "dev")
+	var dbName string
+	switch envName {
+	case "test":
+		dbName = "social_test"
+	case "prod":
+		dbName = "social"
+	default:
+		dbName = "social_dev"
+	}
 	cfg := config{
 		addr: env.GetString(addr, ":4000"),
 		db: dbConfig{
-			dsn:          env.GetString(os.Getenv("DB_DSN"), "postgres://user:adminpassword@localhost:5432/social?sslmode=disable"),
-			maxOpenConns: env.GetInt(os.Getenv("DB_MAX_OPEN_CONNS"), 25),
-			maxIdleConns: env.GetInt(os.Getenv("DB_MAX_IDLE_CONNS"), 25),
-			maxIdleTime:  env.GetString(os.Getenv("DB_MAX_IDLE_TIME"), "15m"),
+			dsn: env.GetString(os.Getenv("MONGODB_URI"), ""),
 		},
 	}
-	db, err := db.New(
-		cfg.db.dsn,
-		cfg.db.maxOpenConns,
-		cfg.db.maxIdleConns,
-		cfg.db.maxIdleTime)
+	client, db, err := db.Connect(cfg.db.dsn, dbName)
 	if err != nil {
 		log.Fatalf("Error connecting to the database: %v", err)
 	}
-
 	store := store.NewStorage(db)
-	defer db.Close()
+	defer client.Disconnect(context.Background())
 
 	// log.Printf("Connected to database at %s", cfg.db.dsn)
 	app := &application{

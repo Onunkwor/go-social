@@ -2,9 +2,9 @@ package store
 
 import (
 	"context"
-	"database/sql"
 
 	"github.com/lib/pq"
+	"go.mongodb.org/mongo-driver/v2/mongo"
 )
 
 type Post struct {
@@ -18,7 +18,7 @@ type Post struct {
 }
 
 type PostStore struct {
-	db *sql.DB
+	db *mongo.Database
 }
 
 func (s *PostStore) Create(ctx context.Context, post *Post) error {

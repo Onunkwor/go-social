@@ -1,7 +1,7 @@
 package store
 
 import (
-	"database/sql"
+	"go.mongodb.org/mongo-driver/v2/mongo"
 )
 
 type Storage struct {
@@ -9,7 +9,7 @@ type Storage struct {
 	Users *UsersStore
 }
 
-func NewStorage(db *sql.DB) Storage {
+func NewStorage(db *mongo.Database) Storage {
 	return Storage{
 		Post:  &PostStore{db: db},
 		Users: &UsersStore{db: db},

@@ -2,7 +2,8 @@ package store
 
 import (
 	"context"
-	"database/sql"
+
+	"go.mongodb.org/mongo-driver/v2/mongo"
 )
 
 type User struct {
@@ -14,7 +15,7 @@ type User struct {
 }
 
 type UsersStore struct {
-	db *sql.DB
+	db *mongo.Database
 }
 
 func (s *UsersStore) Create(ctx context.Context, user *User) error {

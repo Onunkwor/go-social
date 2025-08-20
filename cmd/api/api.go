@@ -24,10 +24,7 @@ type config struct {
 
 // dbConfig holds the database configuration.
 type dbConfig struct {
-	dsn          string
-	maxOpenConns int
-	maxIdleConns int
-	maxIdleTime  string
+	dsn string
 }
 
 // healthCheckHandler is a simple handler to check if the API is running.
